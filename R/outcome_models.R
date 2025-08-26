@@ -114,7 +114,10 @@ fit_prog_rf <- function(X, y, trt, avg=FALSE, ...) {
             return(fit)
     }
 
-
+    # @jestarling Added to fix Error in x[, vname, drop = FALSE] : subscript out of bounds error in
+    # summary() and plot() functions when using augsynth with progfunc="RF". 
+    dimnames(X) = NULL
+  
     if(avg | dim(y)[2] == 1) {
         ## if fitting the average post period value, stack post periods together
         stacky <- c(y)
@@ -125,6 +128,7 @@ fit_prog_rf <- function(X, y, trt, avg=FALSE, ...) {
         fit <- outfit(stackx[stacktrt==0,],
                       stacky[stacktrt==0])
 
+                                 
         ## predict outcome
         y0hat <- matrix(predict(fit, X), ncol=1)
 
